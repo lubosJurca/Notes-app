@@ -13,43 +13,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model User {
-//   id            String @id @default(cuid())
-//   email         String @unique
-//   hashedPasword String
-//   posts         Post[]
-// }
-
-// model Post {
-//   id        String   @id @default(cuid())
-//   title     String
-//   slug      String   @unique
-//   content   String
-//   published Boolean? @default(false)
-//   updatedAt DateTime @updatedAt
-//   createdAt DateTime @default(now())
-//   author    User     @relation(fields: [authorId], references: [id])
-//   authorId  String
-
-//   @@index(slug)
-// }
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
+  kindeId   String?  @unique
   email     String   @unique
-  kindeId   String   @unique
   firstName String?
   lastName  String?
-  posts     Post[] // Relace: Uživatel má mnoho příspěvků
+  notes     Note[] // Jeden uživatel může mít mnoho poznámek
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Post {
-  id        String   @id @default(uuid())
+model Note {
+  id        String   @id @default(cuid()) // Unikátní ID pro poznámku
   title     String
   content   String
+  userId    String // ID uživatele, který poznámku vytvořil
+  user      User     @relation(fields: [userId], references: [id]) // Relace k User
+  tags      Tag[]    @relation("NoteTags") // Mnoho-to-mnoho relace s Tagy
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id]) // Relace: Post patří jednomu uživateli
+}
+
+model Tag {
+  id    String @id @default(cuid()) // Unikátní ID pro tag
+  name  String @unique // Unikátní název tagu
+  notes Note[] @relation("NoteTags") // Mnoho-to-mnoho relace s Poznámkami
 }
