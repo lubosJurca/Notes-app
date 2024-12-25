@@ -5,7 +5,6 @@ import tagIcon from '@/public/icon-tag.svg';
 import settingsIcon from '@/public/icon-settings.svg';
 import Image from 'next/image';
 import Link from 'next/link';
-import HomeIcon from './icons/home-icon';
 
 const MobileNavigation = () => {
   return (
