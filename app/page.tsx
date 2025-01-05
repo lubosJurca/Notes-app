@@ -1,9 +1,7 @@
-import Link from 'next/link';
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -12,8 +10,7 @@ import {
   RegisterLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
 import { Button } from '@/components/ui/button';
-import Image from 'next/image';
-import logo from '@/public/logo.png';
+import { Logo } from '@/components/svg';
 
 export default async function Home() {
   return (
@@ -21,7 +18,7 @@ export default async function Home() {
       <Card>
         <CardHeader>
           <CardTitle className='text-3xl flex flex-col items-center gap-y-4'>
-            <Image src={logo} alt='Note logo' width={100} height={100} />
+            <Logo />
             Welcome to Note
           </CardTitle>
           <CardDescription>Please log in or sign up</CardDescription>

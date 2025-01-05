@@ -28,6 +28,7 @@ model Note {
   id        String   @id @default(cuid()) // Unikátní ID pro poznámku
   title     String
   content   String
+  archived  Boolean  @default(false)
   userId    String // ID uživatele, který poznámku vytvořil
   user      User     @relation(fields: [userId], references: [id]) // Relace k User
   tags      Tag[]    @relation("NoteTags") // Mnoho-to-mnoho relace s Tagy

@@ -1,0 +1,10 @@
+export { default as ArchiveIcon } from './icon-archive.svg';
+export { default as Logo } from './logo.svg';
+export { default as TagIcon } from './icon-tag.svg';
+export { default as HomeIcon } from './icon-home.svg';
+export { default as SettingsIcon } from './icon-settings.svg';
+export { default as SearchIcon } from './icon-search.svg';
+export { default as ArrowLeftIcon } from './icon-arrow-left.svg';
+export { default as DeleteIcon } from './icon-delete.svg';
+export { default as RestoreIcon } from './icon-restore.svg';
+export { default as ClockIcon } from './icon-clock.svg';

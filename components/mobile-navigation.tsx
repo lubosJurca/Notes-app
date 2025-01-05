@@ -1,40 +1,46 @@
-import homeIcon from '@/public/icon-home.svg';
-import searchIcon from '@/public/icon-search.svg';
-import archiveIcon from '@/public/icon-archive.svg';
-import tagIcon from '@/public/icon-tag.svg';
-import settingsIcon from '@/public/icon-settings.svg';
-import Image from 'next/image';
 import Link from 'next/link';
+import SettingsButton from './settings-button';
+import { ArchiveIcon, HomeIcon, SearchIcon, TagIcon } from '@/components/svg';
 
 const MobileNavigation = () => {
   return (
-    <footer>
+    <footer className='fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200'>
       <ul className='flex justify-around p-3 w-full'>
         <li>
-          <Link href={'/notes'} className='flex flex-col items-center'>
-            <Image src={homeIcon} alt='Home Icon' />
+          <Link
+            href={'/notes'}
+            className='flex flex-col items-center hover:scale-110 transform transition-transform'
+          >
+            <HomeIcon className='w-8 h-8' />
             <p className='text-xs hidden sm:block'>Home</p>
           </Link>
         </li>
         <li>
-          <Link href={'/notes'}>
-            <Image src={searchIcon} alt='Search Icon' />
+          <Link
+            href={'/notes'}
+            className='flex flex-col items-center hover:scale-110 transform transition-transform'
+          >
+            <SearchIcon className='w-8 h-8' />
           </Link>
         </li>
         <li>
-          <Link href={'/notes'}>
-            <Image src={archiveIcon} alt='Archive Icon' />
+          <Link
+            href={'/notes/archived'}
+            className='flex flex-col items-center hover:scale-110 transform transition-transform'
+          >
+            <ArchiveIcon className='text-transparent w-8 h-8 ' />
           </Link>
         </li>
         <li>
-          <Link href={'/notes'}>
-            <Image src={tagIcon} alt='Tag Icon' />
+          <Link
+            href={'/notes'}
+            className='flex flex-col items-center hover:scale-110 transform transition-transform'
+          >
+            <TagIcon className='w-8 h-8' />
           </Link>
         </li>
         <li>
-          <Link href={'/notes'}>
-            <Image src={settingsIcon} alt='Settings Icon' />
-          </Link>
+          <SettingsButton />
         </li>
       </ul>
     </footer>
