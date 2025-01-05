@@ -18,7 +18,7 @@ const NotePage = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <section className='space-y-3 mb-12'>
-      <Header id={note?.id} isArchived={note.archived} />
+      <Header {...note} />
       <Separator />
       <div>
         <h1 className='text-3xl font-semibold mb-3'>{note?.title}</h1>

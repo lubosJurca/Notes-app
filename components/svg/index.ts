@@ -8,3 +8,4 @@ export { default as ArrowLeftIcon } from './icon-arrow-left.svg';
 export { default as DeleteIcon } from './icon-delete.svg';
 export { default as RestoreIcon } from './icon-restore.svg';
 export { default as ClockIcon } from './icon-clock.svg';
+export { default as EditIcon } from './icon-edit.svg';

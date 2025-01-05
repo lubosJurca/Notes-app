@@ -2,15 +2,16 @@
 
 import prisma from '@/lib/db';
 import { actionClient } from '@/lib/safe-action';
-import { createNoteActionSchema } from '@/lib/schemas';
+import { updateNoteActionSchema } from '@/lib/schemas';
 import { capitalizeFirstLetter } from '@/lib/utils';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
+import { NextResponse } from 'next/server';
 
-export const createNoteAction = actionClient
-  .schema(createNoteActionSchema)
-  .action(async ({ parsedInput: { title, content, tags } }) => {
+export const editNoteAction = actionClient
+  .schema(updateNoteActionSchema)
+  .action(async ({ parsedInput: { noteId, title, content, tags } }) => {
     try {
       // 1. Získání aktuálního uživatele
       const { getUser } = getKindeServerSession();
@@ -30,36 +31,26 @@ export const createNoteAction = actionClient
       const formattedTags = capitalizeFirstLetter(tags); // Např. ["Work", "Personal"]
       const uniqueTags = [...new Set(formattedTags)]; // Zajistí unikátnost tagů
 
-      // 3. Vytvoření poznámky s relacemi
-      await prisma.note.create({
+      await prisma.note.update({
+        where: {
+          id: noteId,
+        },
         data: {
           title,
           content,
-          user: {
-            connect: {
-              kindeId: user.id, // Připojení k uživateli pomocí ID
-            },
-          },
           tags: {
             connectOrCreate: uniqueTags.map((tag) => ({
-              where: { name: tag }, // Zkontroluje existující tag
-              create: { name: tag }, // Vytvoří nový tag, pokud neexistuje
+              where: { name: tag },
+              create: { name: tag },
             })),
           },
         },
       });
 
-      // 4. Revalidace cesty
-      revalidatePath('/notes');
+      revalidatePath(`/notes/${noteId}`);
 
-      return {
-        status: 200,
-        body: {
-          message: 'Note created successfully',
-        },
-      };
+      //   return NextResponse.json({ message: 'Note updated successfully' });
     } catch (error) {
-      // 5. Chytřejší zpracování chyb
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         console.error('Prisma error:', error.message);
         return {

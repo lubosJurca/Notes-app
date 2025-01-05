@@ -12,28 +12,22 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-
 import { Separator } from './ui/separator';
 import { Textarea } from './ui/textarea';
 import { createNoteFormSchema } from '@/lib/schemas';
-
 import { useToast } from '@/hooks/use-toast';
-
 import { TagIcon } from '@/components/svg';
-import { createNoteAction } from '@/actions/create-note-action';
 import { CircleCheck } from 'lucide-react';
+import { EditNoteFormProps } from '@/lib/types';
+import { editNoteAction } from '@/actions/edit-note-action';
 
-const CreateNoteForm = ({
-  setIsOpen,
-}: {
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
+const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
   const form = useForm<z.infer<typeof createNoteFormSchema>>({
     resolver: zodResolver(createNoteFormSchema),
     defaultValues: {
-      title: '',
-      content: '',
-      tags: '',
+      title: note.title,
+      content: note.content,
+      tags: note.tags.map((tag) => tag.name).join(', '),
     },
   });
   const { toast } = useToast();
@@ -46,22 +40,23 @@ const CreateNoteForm = ({
       .filter(Boolean);
 
     // Update the form values with the sanitized tags
-    const sanitizedValues = {
+    const updatedValues = {
       ...values,
       tags: tagsArray,
+      noteId: note.id,
     };
 
     try {
-      const res = await createNoteAction(sanitizedValues);
+      await editNoteAction(updatedValues);
       toast({
         description: (
           <h2 className='flex items-center gap-6'>
-            <CircleCheck className='text-green-500' /> {res?.data?.body.message}
+            <CircleCheck className='text-green-500' /> "Note has been updated"
           </h2>
         ),
       });
       form.reset();
-      setIsOpen(false);
+      setIsDrawerOpen(false);
     } catch (error) {
       console.error(error);
       toast({
@@ -78,13 +73,13 @@ const CreateNoteForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className='space-y-3 flex flex-col h-full'
       >
-        <h1 className='text-4xl font-semibold'>Create Note</h1>
+        <h1 className='text-4xl font-semibold'>Edit Note</h1>
         <div className='flex justify-end w-full '>
           <Button
             type='button'
             variant='ghost'
             className='text-lg'
-            onClick={() => setIsOpen(false)}
+            onClick={() => setIsDrawerOpen(false)}
           >
             Cancel
           </Button>
@@ -157,4 +152,4 @@ const CreateNoteForm = ({
     </Form>
   );
 };
-export default CreateNoteForm;
+export default EditNoteForm;
