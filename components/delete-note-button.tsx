@@ -50,7 +50,7 @@ const DeleteNoteButton = ({ id }: { id: string }) => {
           onClick={() => setIsModalOpen(true)}
           className=' hover:scale-110 transform transition-transform'
         >
-          <DeleteIcon className='text-transparent size-6' />
+          <DeleteIcon className=' size-6' />
         </TooltipTrigger>
         <TooltipContent>
           <p>Delete Note</p>
@@ -59,7 +59,7 @@ const DeleteNoteButton = ({ id }: { id: string }) => {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className='rounded-xl'>
           <DialogHeader className='flex text-start gap-4'>
-            <DeleteIcon className='text-transparent size-10' />
+            <DeleteIcon className=' size-10' />
             <div>
               <DialogTitle className='mb-2'>Delete Note</DialogTitle>
               <DialogDescription className='text-start'>

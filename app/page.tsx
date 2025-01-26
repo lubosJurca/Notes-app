@@ -23,12 +23,12 @@ export default async function Home() {
           </CardTitle>
           <CardDescription>Please log in or sign up</CardDescription>
         </CardHeader>
-        <CardContent className=' space-x-2'>
+        <CardContent className=' space-x-2 '>
           <Button asChild>
-            <LoginLink>Sign in</LoginLink>
+            <LoginLink className='dark:text-slate-100'>Sign in</LoginLink>
           </Button>
           <Button asChild>
-            <RegisterLink>Sign up</RegisterLink>
+            <RegisterLink className='dark:text-slate-100'>Sign up</RegisterLink>
           </Button>
         </CardContent>
       </Card>

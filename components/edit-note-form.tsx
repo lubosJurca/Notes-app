@@ -71,7 +71,7 @@ const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='space-y-3 flex flex-col h-full'
+        className='space-y-3 flex flex-col h-full '
       >
         <h1 className='text-4xl font-semibold'>Edit Note</h1>
         <div className='flex justify-end w-full '>
@@ -102,7 +102,7 @@ const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
                 <Input
                   placeholder='Enter a title...'
                   {...field}
-                  className='text-3xl placeholder:text-black text-neutral-950 font-bold border-none'
+                  className='text-3xl  font-bold border-none'
                 />
               </FormControl>
 
@@ -141,7 +141,7 @@ const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
                 <Textarea
                   placeholder='Start typing your note here...'
                   minLength={1}
-                  className='focus-visible:outline-none  h-full   text-neutral-700 font'
+                  className='focus-visible:outline-none  h-full    font'
                   {...field}
                 />
               </FormControl>

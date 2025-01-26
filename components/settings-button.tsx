@@ -8,20 +8,23 @@ import {
 } from '@/components/ui/menubar';
 
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
-import { SettingsIcon } from '@/components/svg';
+import { LogoutIcon, SettingsIcon } from '@/components/svg';
 
 const SettingsButton = () => {
   return (
     <Menubar>
       <MenubarMenu>
-        <MenubarTrigger className='border-none outline-none'>
-          <SettingsIcon className='hover:rotate-180 transition-all duration-500 w-8 h-8' />
+        <MenubarTrigger className='border-none outline-none flex flex-col'>
+          <SettingsIcon className='hover:rotate-180  transition-all duration-500 size-6' />
+          <p className='text-xs hidden sm:block lg:hidden'>Settings</p>
         </MenubarTrigger>
         <MenubarContent>
-          <MenubarItem>Delete Account</MenubarItem>
           <MenubarSeparator />
           <LogoutLink>
-            <MenubarItem className='cursor-pointer'>Logout</MenubarItem>
+            <MenubarItem className='cursor-pointer'>
+              <LogoutIcon className='mr-2 size-4 ' />
+              Logout
+            </MenubarItem>
           </LogoutLink>
         </MenubarContent>
       </MenubarMenu>

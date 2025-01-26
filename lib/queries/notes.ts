@@ -4,7 +4,7 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import prisma from '../db';
 import { redirect } from 'next/navigation';
 
-export async function getNotes() {
+export async function getNotes(query?: string) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -16,6 +16,10 @@ export async function getNotes() {
     where: {
       user: {
         kindeId: user.id,
+      },
+      title: {
+        contains: query,
+        mode: 'insensitive',
       },
     },
     include: {
@@ -29,7 +33,7 @@ export async function getNotes() {
   return notes;
 }
 
-export async function getArchivedNotes() {
+export async function getArchivedNotes(query?: string) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
@@ -37,22 +41,86 @@ export async function getArchivedNotes() {
     return redirect('/login');
   }
 
-  const notes = await prisma.note.findMany({
-    where: {
-      user: {
-        kindeId: user.id,
-      },
-      archived: {
-        equals: true,
-      },
-    },
-    include: {
-      tags: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  try {
+    let notes;
+    if (query) {
+      notes = await prisma.note.findMany({
+        where: {
+          user: {
+            kindeId: user.id,
+          },
+          archived: {
+            equals: true,
+          },
+          title: {
+            contains: query,
+            mode: 'insensitive',
+          },
+        },
+        include: {
+          tags: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      return notes;
+    } else {
+      notes = await prisma.note.findMany({
+        where: {
+          user: {
+            kindeId: user.id,
+          },
+          archived: {
+            equals: true,
+          },
+        },
+        include: {
+          tags: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
 
-  return notes;
+      return notes;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getNotesByTag(tag: string, query?: string) {
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
+
+  if (!user) {
+    return redirect('/login');
+  }
+
+  try {
+    const notes = await prisma.note.findMany({
+      where: {
+        user: {
+          kindeId: user.id,
+        },
+        title: {
+          contains: query,
+          mode: 'insensitive',
+        },
+        tags: {
+          some: {
+            name: tag,
+          },
+        },
+      },
+      include: {
+        tags: true,
+      },
+    });
+
+    return notes;
+  } catch (error) {
+    console.log(error);
+  }
 }

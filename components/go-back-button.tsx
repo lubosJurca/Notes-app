@@ -11,7 +11,7 @@ const GoBackButton = () => {
   return (
     <Button
       variant={'link'}
-      className='text-neutral-600 '
+      className='text-neutral-600 px-0 dark:text-slate-100'
       onClick={() => router.back()}
     >
       <ArrowLeftIcon /> Go back

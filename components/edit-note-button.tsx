@@ -28,7 +28,7 @@ const EditNoteButton = (note: NoteCardProps) => {
           onClick={() => setIsDrawerOpen(true)}
           className=' hover:scale-110 transform transition-transform'
         >
-          <EditIcon className='fill-white size-5' />
+          <EditIcon className=' size-5' />
         </TooltipTrigger>
         <TooltipContent>
           <p>Edit Note</p>

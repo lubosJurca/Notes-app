@@ -56,7 +56,7 @@ const ArchiveNoteButton = ({ id }: { id: string }) => {
           onClick={() => setIsModalOpen(true)}
           className=' hover:scale-110 transform transition-transform'
         >
-          <ArchiveIcon className='text-transparent size-6' />
+          <ArchiveIcon className=' size-6' />
         </TooltipTrigger>
         <TooltipContent>
           <p>Archive Note</p>
@@ -65,7 +65,7 @@ const ArchiveNoteButton = ({ id }: { id: string }) => {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className='rounded-xl'>
           <DialogHeader className='flex text-start gap-4'>
-            <ArchiveIcon className='text-transparent size-10' />
+            <ArchiveIcon className=' size-10' />
             <div>
               <DialogTitle className='mb-2'>Archive Note</DialogTitle>
               <DialogDescription className='text-start'>
@@ -83,6 +83,7 @@ const ArchiveNoteButton = ({ id }: { id: string }) => {
             </DialogClose>
             <Button
               type='button'
+              className='dark:text-slate-100'
               variant={'default'}
               onClick={() => handleArchiveNote(id)}
             >

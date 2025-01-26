@@ -107,7 +107,7 @@ const CreateNoteForm = ({
                 <Input
                   placeholder='Enter a title...'
                   {...field}
-                  className='text-3xl placeholder:text-black text-neutral-950 font-bold border-none'
+                  className='text-3xl   font-bold border-none'
                 />
               </FormControl>
 
@@ -146,7 +146,7 @@ const CreateNoteForm = ({
                 <Textarea
                   placeholder='Start typing your note here...'
                   minLength={1}
-                  className='focus-visible:outline-none  h-full   text-neutral-700 font'
+                  className='focus-visible:outline-none  h-full  dark:placeholder:text-slate-500  font'
                   {...field}
                 />
               </FormControl>

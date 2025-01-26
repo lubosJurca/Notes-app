@@ -43,7 +43,7 @@ const RestoreNoteButton = ({ id }: { id: string }) => {
           className='cursor-pointer'
           onClick={() => handleArchiveNote(id)}
         >
-          <RestoreIcon className='w-6 h-6 text-transparent' />
+          <RestoreIcon className='w-6 h-6 ' />
         </TooltipTrigger>
         <TooltipContent>
           <p>Restore Note</p>

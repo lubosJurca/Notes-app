@@ -11,25 +11,30 @@ import {
 import { Button } from '@/components/ui/button';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 
-import { PlusIcon } from 'lucide-react';
 import { useState } from 'react';
-import CreateNoteForm from './create-note-form';
+import CreateNoteForm from '@/components/create-note-form';
+import { PlusIcon } from '@/components/svg';
 
 const CreateNotePlusButton = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Drawer direction='right' open={isOpen} onOpenChange={setIsOpen}>
-      <DrawerTrigger>
-        <Button
-          asChild
-          variant='default'
-          className='fixed bottom-24 right-5 rounded-full w-16 h-16'
-        >
-          <PlusIcon size={12} />
+      {/* Mobile Trigger */}
+      <DrawerTrigger asChild>
+        <Button className='fixed bottom-24 right-5 rounded-full w-16 h-16 lg:hidden'>
+          <PlusIcon style={{ width: '30px', height: '30px' }} />
         </Button>
       </DrawerTrigger>
-      <DrawerContent className='h-screen p-3 flex flex-col'>
+
+      {/* Desktop Trigger */}
+      <DrawerTrigger asChild>
+        <Button className='bg-primary text-white p-2 rounded-md w-full hover:bg-primary/90 dark:hover:bg-primary/60 transition-all duration-300 hidden lg:block'>
+          Create New Note
+        </Button>
+      </DrawerTrigger>
+
+      <DrawerContent className='h-screen p-3 flex flex-col '>
         <DrawerHeader>
           <VisuallyHidden.Root>
             <DrawerTitle>Create Note</DrawerTitle>
