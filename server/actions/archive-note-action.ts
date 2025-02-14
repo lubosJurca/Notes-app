@@ -1,24 +1,15 @@
 'use server';
-import prisma from '@/lib/db';
-import { actionClient } from '@/lib/safe-action';
+import prisma from '@/server/db';
+import { authenticateUser } from '@/server/queries/authenticate-user';
+import { actionClient } from '@/server/safe-action';
 import { archiveNoteSchema } from '@/lib/schemas';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+
 import { revalidatePath } from 'next/cache';
 
-export const restoreNoteAction = actionClient
+export const archiveNoteAction = actionClient
   .schema(archiveNoteSchema)
   .action(async ({ parsedInput: { noteId } }) => {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    if (!user) {
-      return {
-        status: 401,
-        body: {
-          error: 'Unauthorized: User not found',
-        },
-      };
-    }
+    await authenticateUser();
 
     try {
       await prisma.note.update({
@@ -26,7 +17,7 @@ export const restoreNoteAction = actionClient
           id: noteId,
         },
         data: {
-          archived: false,
+          archived: true,
         },
       });
 
@@ -43,7 +34,7 @@ export const restoreNoteAction = actionClient
       return {
         status: 500,
         body: {
-          error: 'Error deleting note',
+          error: 'An unexpected error occurred while creating the note',
         },
       };
     }

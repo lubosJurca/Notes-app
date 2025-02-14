@@ -1,6 +1,7 @@
 import GoBackButton from '@/components/go-back-button';
-import NoteCard from '@/components/note-card';
-import { getNotesByTag } from '@/lib/queries/notes';
+import Loading from '@/components/loading-skeleton';
+import NotesList from '@/components/notes-list';
+import { Suspense } from 'react';
 
 const TagDetailPage = async ({
   params,
@@ -8,8 +9,6 @@ const TagDetailPage = async ({
   params: Promise<{ tag: string }>;
 }) => {
   const tag = (await params).tag;
-
-  const notes = await getNotesByTag(tag);
 
   return (
     <section className='space-y-4'>
@@ -21,16 +20,10 @@ const TagDetailPage = async ({
       <p className='text-neutral-700 '>
         All notes with the <span>”{tag}”</span> tag are shown here.
       </p>
-      <ul className='flex flex-col gap-4'>
-        {notes?.map((note) => (
-          <li
-            key={note.id}
-            className='border-b p-2 last:border-none hover:bg-slate-50 transition-all duration-300'
-          >
-            <NoteCard {...note} />
-          </li>
-        ))}
-      </ul>
+
+      <Suspense fallback={<Loading />}>
+        <NotesList />
+      </Suspense>
     </section>
   );
 };

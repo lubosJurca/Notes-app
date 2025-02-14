@@ -16,3 +16,19 @@ export type EditNoteFormProps = {
   note: NoteCardProps;
   setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
+export interface ActionSuccess {
+  status: 200;
+  body: {
+    message: string;
+  };
+}
+
+export interface ActionError {
+  status: number;
+  body: {
+    error: string;
+  };
+}
+
+export type ActionResponse = ActionSuccess | ActionError;

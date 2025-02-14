@@ -1,10 +1,10 @@
 'use server';
 
-import prisma from '@/lib/db';
-import { actionClient } from '@/lib/safe-action';
+import prisma from '@/server/db';
+import { authenticateUser } from '@/server/queries/authenticate-user';
+import { actionClient } from '@/server/safe-action';
 import { createNoteActionSchema } from '@/lib/schemas';
 import { capitalizeFirstLetter } from '@/lib/utils';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
@@ -12,18 +12,7 @@ export const createNoteAction = actionClient
   .schema(createNoteActionSchema)
   .action(async ({ parsedInput: { title, content, tags } }) => {
     try {
-      // 1. Získání aktuálního uživatele
-      const { getUser } = getKindeServerSession();
-      const user = await getUser();
-
-      if (!user || !user.id) {
-        return {
-          status: 401,
-          body: {
-            error: 'Unauthorized: User not found',
-          },
-        };
-      }
+      const user = await authenticateUser();
 
       // 2. Zpracování tagů
 
@@ -31,7 +20,7 @@ export const createNoteAction = actionClient
       const uniqueTags = [...new Set(formattedTags)]; // Zajistí unikátnost tagů
 
       // 3. Vytvoření poznámky s relacemi
-      await prisma.note.create({
+      const note = await prisma.note.create({
         data: {
           title,
           content,
@@ -49,8 +38,17 @@ export const createNoteAction = actionClient
         },
       });
 
+      if (!note) {
+        return {
+          status: 400,
+          body: {
+            error: 'Failed to create note.',
+          },
+        };
+      }
+
       // 4. Revalidace cesty
-      revalidatePath('/notes');
+      revalidatePath('/(dashboard)/notes');
 
       return {
         status: 200,

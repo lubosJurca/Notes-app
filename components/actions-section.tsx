@@ -1,11 +1,11 @@
 import { NoteCardProps } from '@/lib/types';
-import ArchiveNoteButton from '../archive-note-button';
-import DeleteNoteButton from '../delete-note-button';
-import GoBackButton from '../go-back-button';
-import RestoreNoteButton from '../restore-note-button';
-import EditNoteButton from '../edit-note-button';
+import ArchiveNoteButton from './archive-note-button';
+import DeleteNoteButton from './delete-note-button';
+import GoBackButton from './go-back-button';
+import RestoreNoteButton from './restore-note-button';
+import EditNoteButton from './edit-note-button';
 
-const Header = (note: NoteCardProps) => {
+const ActionsSection = (note: NoteCardProps) => {
   return (
     <div className='flex justify-between items-center '>
       <GoBackButton />
@@ -21,4 +21,4 @@ const Header = (note: NoteCardProps) => {
     </div>
   );
 };
-export default Header;
+export default ActionsSection;

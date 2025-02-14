@@ -19,7 +19,8 @@ import { useToast } from '@/hooks/use-toast';
 import { TagIcon } from '@/components/svg';
 import { CircleCheck } from 'lucide-react';
 import { EditNoteFormProps } from '@/lib/types';
-import { editNoteAction } from '@/actions/edit-note-action';
+import { editNoteAction } from '@/server/actions/edit-note-action';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
   const form = useForm<z.infer<typeof createNoteFormSchema>>({
@@ -31,6 +32,61 @@ const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
     },
   });
   const { toast } = useToast();
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: editNoteAction,
+    onMutate: async (updatedNote) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['notes', note.id] });
+
+      // Snapshot the previous value
+      const previousNote = queryClient.getQueryData(['notes', note.id]);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['notes', note.id], {
+        ...updatedNote,
+        tags: updatedNote.tags.map((tag) => ({ name: tag })),
+        updatedAt: new Date().toISOString(),
+      });
+
+      // Return a context with the previous and new todo
+      return { previousNote, updatedNote };
+    },
+    // If the mutation fails, use the context we returned above
+    onError: (err, updatedNote, context) => {
+      if (context)
+        queryClient.setQueryData(
+          ['todos', context.updatedNote.noteId],
+          context.previousNote
+        );
+      console.error(err);
+      toast({
+        variant: 'destructive',
+        title: 'Oops! Something went wrong',
+        description: 'Please try again later.',
+      });
+    },
+    // Always refetch after error or success:
+    onSettled: (updatedNote) => {
+      queryClient.invalidateQueries({ queryKey: ['notes', note.id] });
+    },
+    onSuccess: () => {
+      toast({
+        description: (
+          <h2 className='flex items-center gap-6'>
+            <CircleCheck className='text-green-500' /> Note has been updated
+          </h2>
+        ),
+      });
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
+      queryClient.invalidateQueries({ queryKey: ['tags'] });
+      form.reset();
+      setIsDrawerOpen(false);
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof createNoteFormSchema>) {
     // Split the tags by commas, trim the whitespace, and remove any empty strings
@@ -46,25 +102,7 @@ const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
       noteId: note.id,
     };
 
-    try {
-      await editNoteAction(updatedValues);
-      toast({
-        description: (
-          <h2 className='flex items-center gap-6'>
-            <CircleCheck className='text-green-500' /> "Note has been updated"
-          </h2>
-        ),
-      });
-      form.reset();
-      setIsDrawerOpen(false);
-    } catch (error) {
-      console.error(error);
-      toast({
-        variant: 'destructive',
-        title: 'Oops! Something went wrong',
-        description: 'Please try again later.',
-      });
-    }
+    mutation.mutate(updatedValues);
   }
 
   return (

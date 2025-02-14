@@ -18,14 +18,14 @@ const Heading = () => {
   }
 
   return (
-    <header className=' items-center hidden lg:flex  justify-between border-b py-4'>
+    <div className=' items-center hidden lg:flex  justify-between border-b dark:border-b-slate-400 px-2 py-4'>
       <div className='text-3xl font-semibold  '>{title}</div>
       <div className='flex items-center gap-4'>
         <ModeToggle />
         <SearchInput />
         <SettingsButton />
       </div>
-    </header>
+    </div>
   );
 };
 export default Heading;

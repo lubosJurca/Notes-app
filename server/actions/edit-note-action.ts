@@ -1,33 +1,18 @@
 'use server';
 
-import prisma from '@/lib/db';
-import { actionClient } from '@/lib/safe-action';
+import prisma from '@/server/db';
+import { actionClient } from '@/server/safe-action';
 import { updateNoteActionSchema } from '@/lib/schemas';
 import { capitalizeFirstLetter } from '@/lib/utils';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
-import { NextResponse } from 'next/server';
+import { authenticateUser } from '../queries/authenticate-user';
 
 export const editNoteAction = actionClient
   .schema(updateNoteActionSchema)
   .action(async ({ parsedInput: { noteId, title, content, tags } }) => {
+    await authenticateUser();
     try {
-      // 1. Získání aktuálního uživatele
-      const { getUser } = getKindeServerSession();
-      const user = await getUser();
-
-      if (!user || !user.id) {
-        return {
-          status: 401,
-          body: {
-            error: 'Unauthorized: User not found',
-          },
-        };
-      }
-
-      // 2. Zpracování tagů
-
       const formattedTags = capitalizeFirstLetter(tags); // Např. ["Work", "Personal"]
       const uniqueTags = [...new Set(formattedTags)]; // Zajistí unikátnost tagů
 
@@ -39,6 +24,7 @@ export const editNoteAction = actionClient
           title,
           content,
           tags: {
+            set: [],
             connectOrCreate: uniqueTags.map((tag) => ({
               where: { name: tag },
               create: { name: tag },
@@ -48,8 +34,6 @@ export const editNoteAction = actionClient
       });
 
       revalidatePath(`/notes/${noteId}`);
-
-      //   return NextResponse.json({ message: 'Note updated successfully' });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         console.error('Prisma error:', error.message);

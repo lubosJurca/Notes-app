@@ -5,7 +5,7 @@ import TagsList from '@/components/tags-list';
 
 const Sidebar = () => {
   return (
-    <aside className='hidden lg:block w-64 border-r min-h-screen mt-6 space-y-4'>
+    <aside className='hidden lg:block w-64 border-r dark:border-r-slate-400 min-h-screen mt-6 space-y-4'>
       <Logo />
       <NavigationLg />
       <Separator />

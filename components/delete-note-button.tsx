@@ -3,9 +3,8 @@
 import { useToast } from '@/hooks/use-toast';
 
 import { CircleCheck } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
-import { deleteNoteAction } from '@/actions/delete-note-action';
+import { deleteNoteAction } from '@/server/actions/delete-note-action';
 import {
   Tooltip,
   TooltipContent,
@@ -25,23 +24,40 @@ import { DeleteIcon } from '@/components/svg';
 import { Separator } from './ui/separator';
 import { Button } from './ui/button';
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 const DeleteNoteButton = ({ id }: { id: string }) => {
   const { toast } = useToast();
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleDelete = async (id: string) => {
-    const res = await deleteNoteAction({ noteId: id });
-    toast({
-      description: (
-        <h2 className='flex items-center gap-6'>
-          <CircleCheck className='text-green-500' /> {res?.data?.body.message}
-        </h2>
-      ),
-    });
-    router.push('/notes');
-  };
+  const mutation = useMutation({
+    mutationFn: deleteNoteAction,
+    onSuccess: () => {
+      toast({
+        description: (
+          <h2 className='flex items-center gap-6 dark:text-neutral-300'>
+            <CircleCheck className='text-green-500' /> Note deleted successfully
+          </h2>
+        ),
+      });
+
+      router.push('/notes');
+      queryClient.invalidateQueries({ queryKey: ['tags'] });
+      setIsModalOpen(false);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Oops! Something went wrong',
+        description: 'Please try again later.',
+      });
+    },
+  });
 
   return (
     <TooltipProvider>
@@ -78,7 +94,7 @@ const DeleteNoteButton = ({ id }: { id: string }) => {
             <Button
               type='button'
               variant={'destructive'}
-              onClick={() => handleDelete(id)}
+              onClick={() => mutation.mutate({ noteId: id })}
             >
               Delete Note
             </Button>

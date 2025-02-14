@@ -1,4 +1,4 @@
-import NotesList from './notes-list-beta';
+import NotesList from './notes-list';
 
 export default function NotesSidebar() {
   return <div>Work in progress</div>;

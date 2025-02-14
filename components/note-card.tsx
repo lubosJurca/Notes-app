@@ -12,22 +12,29 @@ const NoteCard = (data: NoteCardProps) => {
     ? `/notes/${data.id}?${currentParams}`
     : `/notes/${data.id}`;
 
-  return (
-    <Link href={href} className='cursor-pointer '>
-      <h2 className='text-2xl font-semibold'>{data.title}</h2>
+  const formattedDate = formatDate(new Date(data.createdAt));
+  const formatTitle =
+    data.title.length > 30 ? data.title.slice(0, 30) + '...' : data.title;
 
-      <div className='space-x-1 my-4'>
+  return (
+    <Link
+      href={href}
+      className='cursor-pointer flex flex-col w-full  flex-wrap overflow-hidden'
+    >
+      <h2 className='text-2xl font-semibold'>{formatTitle}</h2>
+
+      <ul className='space-x-1 my-4 flex gap-1 flex-wrap '>
         {data.tags.map((tag) => (
-          <span
-            className='bg-neutral-200 dark:text-slate-800  px-2 py-1 rounded'
+          <li
+            className='bg-neutral-200 dark:text-slate-800  p-1 rounded'
             key={tag.id}
           >
             {tag.name}
-          </span>
+          </li>
         ))}
-      </div>
+      </ul>
 
-      <p>{formatDate(new Date(data.createdAt))}</p>
+      <p>{formattedDate}</p>
     </Link>
   );
 };

@@ -1,5 +1,5 @@
 import Loading from '@/components/loading-skeleton';
-import NotesList from '@/components/notes-list-beta';
+import NotesList from '@/components/notes-list';
 
 import { Suspense } from 'react';
 

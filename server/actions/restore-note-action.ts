@@ -1,24 +1,15 @@
 'use server';
-import prisma from '@/lib/db';
-import { actionClient } from '@/lib/safe-action';
+import prisma from '@/server/db';
+import { actionClient } from '@/server/safe-action';
 import { archiveNoteSchema } from '@/lib/schemas';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { revalidatePath } from 'next/cache';
 
-export const archiveNoteAction = actionClient
+import { revalidatePath } from 'next/cache';
+import { authenticateUser } from '../queries/authenticate-user';
+
+export const restoreNoteAction = actionClient
   .schema(archiveNoteSchema)
   .action(async ({ parsedInput: { noteId } }) => {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    if (!user) {
-      return {
-        status: 401,
-        body: {
-          error: 'Unauthorized: User not found',
-        },
-      };
-    }
+    await authenticateUser();
 
     try {
       await prisma.note.update({
@@ -26,7 +17,7 @@ export const archiveNoteAction = actionClient
           id: noteId,
         },
         data: {
-          archived: true,
+          archived: false,
         },
       });
 

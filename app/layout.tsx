@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/auth/AuthProvider';
 import { Toaster } from '@/components/ui/toaster';
-import { ThemeProvider } from '@/components/providers/theme-provider';
+import { ThemeProvider } from '@/providers/theme-provider';
 
 const inter = Inter({
   variable: '--font-inter',

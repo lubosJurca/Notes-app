@@ -2,7 +2,7 @@
 
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
-import prisma from '@/lib/db';
+import prisma from '@/server/db';
 
 export const getTags = async () => {
   const { getUser } = getKindeServerSession();

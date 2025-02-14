@@ -20,14 +20,18 @@ import { createNoteFormSchema } from '@/lib/schemas';
 import { useToast } from '@/hooks/use-toast';
 
 import { TagIcon } from '@/components/svg';
-import { createNoteAction } from '@/actions/create-note-action';
+import { createNoteAction } from '@/server/actions/create-note-action';
 import { CircleCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const CreateNoteForm = ({
   setIsOpen,
 }: {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const queryClient = useQueryClient();
+
   const form = useForm<z.infer<typeof createNoteFormSchema>>({
     resolver: zodResolver(createNoteFormSchema),
     defaultValues: {
@@ -37,6 +41,30 @@ const CreateNoteForm = ({
     },
   });
   const { toast } = useToast();
+
+  const mutation = useMutation({
+    mutationFn: createNoteAction,
+    onSuccess: () => {
+      toast({
+        description: (
+          <h2 className='flex items-center gap-6'>
+            <CircleCheck className='text-green-500' /> Note created successfully
+          </h2>
+        ),
+      });
+      queryClient.invalidateQueries({ queryKey: ['tags'] });
+      form.reset();
+      setIsOpen(false);
+    },
+    onError: (error) => {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Oops! Something went wrong',
+        description: 'Please try again later.',
+      });
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof createNoteFormSchema>) {
     // Split the tags by commas, trim the whitespace, and remove any empty strings
@@ -51,25 +79,7 @@ const CreateNoteForm = ({
       tags: tagsArray,
     };
 
-    try {
-      const res = await createNoteAction(sanitizedValues);
-      toast({
-        description: (
-          <h2 className='flex items-center gap-6'>
-            <CircleCheck className='text-green-500' /> {res?.data?.body.message}
-          </h2>
-        ),
-      });
-      form.reset();
-      setIsOpen(false);
-    } catch (error) {
-      console.error(error);
-      toast({
-        variant: 'destructive',
-        title: 'Oops! Something went wrong',
-        description: 'Please try again later.',
-      });
-    }
+    mutation.mutate(sanitizedValues);
   }
 
   return (

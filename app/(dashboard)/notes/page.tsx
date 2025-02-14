@@ -1,4 +1,4 @@
-import NotesList from '@/components/notes-list-beta';
+import NotesList from '@/components/notes-list';
 
 const AllNotes = async () => {
   return (

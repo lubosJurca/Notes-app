@@ -1,6 +1,6 @@
 'use client';
 
-import { archiveNoteAction } from '@/actions/archive-note-action';
+import { archiveNoteAction } from '@/server/actions/archive-note-action';
 
 import { useToast } from '@/hooks/use-toast';
 import { CircleCheck } from 'lucide-react';
@@ -24,14 +24,19 @@ import { ArchiveIcon } from '@/components/svg';
 import { useState } from 'react';
 import { Separator } from './ui/separator';
 import { Button } from './ui/button';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 const ArchiveNoteButton = ({ id }: { id: string }) => {
   const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const queryClient = useQueryClient();
 
-  const handleArchiveNote = async (id: string) => {
-    try {
-      await archiveNoteAction({ noteId: id });
+  const mutation = useMutation({
+    mutationFn: archiveNoteAction,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
       toast({
         title: 'Note archived',
         description: (
@@ -40,14 +45,18 @@ const ArchiveNoteButton = ({ id }: { id: string }) => {
           </h2>
         ),
       });
-    } catch (error) {
+
+      setIsModalOpen(false);
+      // router.push('/notes?archived=true');
+    },
+    onError: (error) => {
       console.error(error);
       toast({
         title: 'Error!',
         description: 'Failed to archive note. Please try again later.',
       });
-    }
-  };
+    },
+  });
 
   return (
     <TooltipProvider>
@@ -85,7 +94,7 @@ const ArchiveNoteButton = ({ id }: { id: string }) => {
               type='button'
               className='dark:text-slate-100'
               variant={'default'}
-              onClick={() => handleArchiveNote(id)}
+              onClick={() => mutation.mutate({ noteId: id })}
             >
               Archive Note
             </Button>
