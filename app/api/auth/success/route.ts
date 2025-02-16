@@ -5,8 +5,7 @@ import { NextResponse } from 'next/server';
 const prisma = new PrismaClient();
 
 const redirectUri =
-  process.env.NEXT_PUBLIC_KINDE_REDIRECT_URI ??
-  'http://localhost:3000/api/auth/callback';
+  process.env.NEXT_PUBLIC_KINDE_REDIRECT_URI ?? 'http://localhost:3000/notes';
 
 export async function GET() {
   const { getUser } = getKindeServerSession();
