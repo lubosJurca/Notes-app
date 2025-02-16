@@ -14,6 +14,7 @@ const redirectUri =
   process.env.KINDE_POST_LOGOUT_REDIRECT_URL ?? 'http://localhost:3000/';
 
 const SettingsButton = () => {
+  console.log(redirectUri);
   return (
     <Menubar>
       <MenubarMenu>
