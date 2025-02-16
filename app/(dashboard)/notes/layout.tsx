@@ -15,7 +15,12 @@ const NotesLayout = async ({ children }: { children: React.ReactNode }) => {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ['notes'],
-    queryFn: getAllNotes,
+    queryFn: () =>
+      getAllNotes({
+        isArchived: false,
+        query: '',
+        tag: '',
+      }),
   });
 
   return (

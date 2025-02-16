@@ -4,7 +4,6 @@ import ActionsSection from '@/components/actions-section';
 import { ClockIcon, TagIcon } from '@/components/svg';
 import { Separator } from '@/components/ui/separator';
 import { getNote } from '@/server/queries/note';
-import { formatDate } from '@/lib/utils';
 import { notFound, useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import NoteDetailSkeleton from '@/components/note-detail-skeleton';
@@ -18,7 +17,6 @@ const NotePage = () => {
     queryKey: ['notes', noteId],
     queryFn: () => getNote(noteId as string),
   });
-  console.log(data);
 
   if (isLoading)
     return (

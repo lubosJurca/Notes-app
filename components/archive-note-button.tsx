@@ -25,12 +25,11 @@ import { useState } from 'react';
 import { Separator } from './ui/separator';
 import { Button } from './ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
 
 const ArchiveNoteButton = ({ id }: { id: string }) => {
   const { toast } = useToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
+
   const queryClient = useQueryClient();
 
   const mutation = useMutation({

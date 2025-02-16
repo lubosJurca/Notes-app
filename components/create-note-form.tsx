@@ -22,7 +22,7 @@ import { useToast } from '@/hooks/use-toast';
 import { TagIcon } from '@/components/svg';
 import { createNoteAction } from '@/server/actions/create-note-action';
 import { CircleCheck } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const CreateNoteForm = ({
@@ -53,6 +53,7 @@ const CreateNoteForm = ({
         ),
       });
       queryClient.invalidateQueries({ queryKey: ['tags'] });
+      queryClient.invalidateQueries({ queryKey: ['notes'] });
       form.reset();
       setIsOpen(false);
     },

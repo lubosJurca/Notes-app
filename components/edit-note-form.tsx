@@ -56,13 +56,14 @@ const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
       return { previousNote, updatedNote };
     },
     // If the mutation fails, use the context we returned above
-    onError: (err, updatedNote, context) => {
+    onError: (err, _, context) => {
       if (context)
         queryClient.setQueryData(
           ['todos', context.updatedNote.noteId],
           context.previousNote
         );
       console.error(err);
+
       toast({
         variant: 'destructive',
         title: 'Oops! Something went wrong',
@@ -70,7 +71,7 @@ const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
       });
     },
     // Always refetch after error or success:
-    onSettled: (updatedNote) => {
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['notes', note.id] });
     },
     onSuccess: () => {
