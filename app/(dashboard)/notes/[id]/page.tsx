@@ -27,7 +27,9 @@ const NotePage = () => {
   if (error) return <h1>Error: {error.message}</h1>;
   if (!data) return notFound();
 
-  const tags = data.tags.map((tag) => tag.name).join(', ');
+  const tags = data.tags
+    .map((tag: { name: string; id: string }) => tag.name)
+    .join(', ');
 
   return (
     <section className='space-y-3 mb-12  h-full '>
