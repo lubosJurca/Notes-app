@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Loading from './loading-skeleton';
 import { useQuery } from '@tanstack/react-query';
 import { getAllNotes } from '@/server/queries/get-notes';
+import { NoteCardProps } from '@/lib/types';
 
 const NotesList = () => {
   const searchParams = useSearchParams();
@@ -58,7 +59,7 @@ const NotesList = () => {
   if (data)
     return (
       <ul className='flex flex-col min-h-full  gap-4  overflow-hidden '>
-        {data.map((note) => (
+        {data.map((note: NoteCardProps) => (
           <li
             key={note.id}
             className='border-b p-2 dark:border-b-slate-400 dark:hover:bg-slate-800 last:border-none hover:bg-slate-50 transition-all duration-300'
