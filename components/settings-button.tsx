@@ -10,6 +10,9 @@ import {
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { LogoutIcon, SettingsIcon } from '@/components/svg';
 
+const redirectUri =
+  process.env.NEXT_PUBLIC_KINDE_REDIRECT_URI ?? 'http://localhost:3000/';
+
 const SettingsButton = () => {
   return (
     <Menubar>
@@ -20,7 +23,7 @@ const SettingsButton = () => {
         </MenubarTrigger>
         <MenubarContent>
           <MenubarSeparator />
-          <LogoutLink>
+          <LogoutLink postLogoutRedirectURL={redirectUri}>
             <MenubarItem className='cursor-pointer'>
               <LogoutIcon className='mr-2 size-4 ' />
               Logout
