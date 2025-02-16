@@ -3,6 +3,7 @@
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import prisma from '@/server/db';
+import { NoteCardProps } from '@/lib/types';
 
 export const getTags = async () => {
   const { getUser } = getKindeServerSession();
@@ -27,7 +28,7 @@ export const getTags = async () => {
     const uniqueTags = new Set<string>();
 
     // Projdeme všechny poznámky a jejich tagy a přidáme je do Setu
-    userNotes.forEach((note) => {
+    userNotes.forEach((note: NoteCardProps) => {
       note.tags.forEach((tag) => {
         uniqueTags.add(tag.name);
       });
