@@ -4,7 +4,7 @@ import prisma from '@/server/db';
 import { actionClient } from '@/server/safe-action';
 import { updateNoteActionSchema } from '@/lib/schemas';
 import { capitalizeFirstLetter } from '@/lib/utils';
-import { Prisma } from '@prisma/client';
+
 import { revalidatePath } from 'next/cache';
 import { authenticateUser } from '../queries/authenticate-user';
 
@@ -35,16 +35,6 @@ export const editNoteAction = actionClient
 
       revalidatePath(`/notes/${noteId}`);
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        console.error('Prisma error:', error.message);
-        return {
-          status: 400,
-          body: {
-            error: `Database error: ${error.message}`,
-          },
-        };
-      }
-
       console.error('Unexpected error:', error);
       return {
         status: 500,
