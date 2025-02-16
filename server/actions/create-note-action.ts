@@ -5,7 +5,6 @@ import { authenticateUser } from '@/server/queries/authenticate-user';
 import { actionClient } from '@/server/safe-action';
 import { createNoteActionSchema } from '@/lib/schemas';
 import { capitalizeFirstLetter } from '@/lib/utils';
-import { Prisma } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 
 export const createNoteAction = actionClient
@@ -57,17 +56,6 @@ export const createNoteAction = actionClient
         },
       };
     } catch (error) {
-      // 5. Chytřejší zpracování chyb
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        console.error('Prisma error:', error.message);
-        return {
-          status: 400,
-          body: {
-            error: `Database error: ${error.message}`,
-          },
-        };
-      }
-
       console.error('Unexpected error:', error);
       return {
         status: 500,
