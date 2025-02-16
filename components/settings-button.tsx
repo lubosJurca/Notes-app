@@ -11,7 +11,7 @@ import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/components';
 import { LogoutIcon, SettingsIcon } from '@/components/svg';
 
 const redirectUri =
-  process.env.NEXT_PUBLIC_KINDE_REDIRECT_URI ?? 'http://localhost:3000/';
+  process.env.KINDE_POST_LOGOUT_REDIRECT_URL ?? 'http://localhost:3000/';
 
 const SettingsButton = () => {
   return (
