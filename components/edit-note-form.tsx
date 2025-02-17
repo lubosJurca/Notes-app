@@ -126,7 +126,7 @@ const EditNoteForm = ({ note, setIsDrawerOpen }: EditNoteFormProps) => {
             type='submit'
             variant={'ghost'}
             className='text-blue-500 text-lg disabled:animate-pulse transition-all'
-            disabled={form.formState.isSubmitting}
+            disabled={mutation.isPending}
           >
             Save Note
           </Button>

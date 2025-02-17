@@ -94,6 +94,7 @@ const DeleteNoteButton = ({ id }: { id: string }) => {
             <Button
               type='button'
               variant={'destructive'}
+              disabled={mutation.isPending}
               onClick={() => mutation.mutate({ noteId: id })}
             >
               Delete Note

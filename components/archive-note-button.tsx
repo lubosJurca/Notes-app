@@ -93,6 +93,7 @@ const ArchiveNoteButton = ({ id }: { id: string }) => {
               type='button'
               className='dark:text-slate-100'
               variant={'default'}
+              disabled={mutation.isPending}
               onClick={() => mutation.mutate({ noteId: id })}
             >
               Archive Note

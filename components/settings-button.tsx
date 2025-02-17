@@ -24,7 +24,7 @@ const SettingsButton = () => {
         </MenubarTrigger>
         <MenubarContent>
           <MenubarSeparator />
-          <LogoutLink postLogoutRedirectURL={redirectUri}>
+          <LogoutLink postLogoutRedirectURL={'https://www.google.com'}>
             <MenubarItem className='cursor-pointer'>
               <LogoutIcon className='mr-2 size-4 ' />
               Logout

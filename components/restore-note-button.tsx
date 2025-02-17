@@ -53,20 +53,6 @@ const RestoreNoteButton = ({ id }: { id: string }) => {
   });
 
   return (
-    // <TooltipProvider>
-    //   <Tooltip>
-    //     <TooltipTrigger
-    //       asChild
-    //       className='cursor-pointer'
-    //       onClick={() => mutation.mutate({ noteId: id })}
-    //     >
-    //       <RestoreIcon className='w-6 h-6 ' />
-    //     </TooltipTrigger>
-    //     <TooltipContent>
-    //       <p>Restore Note</p>
-    //     </TooltipContent>
-    //   </Tooltip>
-    // </TooltipProvider>
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger
@@ -102,6 +88,7 @@ const RestoreNoteButton = ({ id }: { id: string }) => {
               type='button'
               className='dark:text-slate-100'
               variant={'default'}
+              disabled={mutation.isPending}
               onClick={() => mutation.mutate({ noteId: id })}
             >
               Restore Note
